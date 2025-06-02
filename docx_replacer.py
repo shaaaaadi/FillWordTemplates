@@ -121,6 +121,13 @@ if __name__ == "__main__":
     replacements = [
         {"key": "<cusName>", "value": "פיראס סרור", "type": "string"},
         {"key": "<cusPhone>", "value": "0543341222", "type": "string"},
+        {"key": "<hnDate>", "value": "14/11/2009", "type": "string"},
+        {"key": "<date>", "value": "14/11/2010", "type": "string"},
+        {"key": "<kilometer>", "value": "14/11/2009", "type": "string"},
+        {"key": "<cn_1>", "value": "798", "type": "string"},
+        {"key": "<cn_2>", "value": "30", "type": "string"},
+        {"key": "<cn_3>", "value": "102", "type": "string"},
+        {"key": "<P1a>", "value": "X", "type": "string"},
     ]
 
     replacer = DocxReplacer(input_file, output_file, replacements)
