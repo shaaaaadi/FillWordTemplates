@@ -2,7 +2,8 @@ from docx import Document
 from docx.shared import Inches
 import re
 import time
-
+import io
+import base64
 
 class DocxReplacer:
     def __init__(self, input_file, output_file, replacements):
@@ -58,7 +59,12 @@ class DocxReplacer:
                 if key in full_text:
                     paragraph = remove_placeholder_runs(paragraph, key)
                     run = paragraph.add_run()
-                    run.add_picture(image_path, width=Inches(1))
+
+                    # Decode the base64 string to bytes
+                    image_bytes = base64.b64decode(image_path)
+                    image_stream = io.BytesIO(image_bytes)
+                    run.add_picture(image_stream, width=Inches(1))
+
                     full_text = full_text.replace(key, "")
 
             replaced_text = self._apply_text_replacement(full_text, text_replacements)
@@ -81,7 +87,12 @@ class DocxReplacer:
                                 for run in paragraph.runs:
                                     run.text = ""
                                 run = paragraph.add_run()
-                                run.add_picture(image_path, width=Inches(2))
+
+                                #Decode the base64 string to bytes
+                                image_bytes = base64.b64decode(image_path)
+                                image_stream = io.BytesIO(image_bytes)
+                                run.add_picture(image_stream, width=Inches(1))
+
                                 full_text = full_text.replace(key, "")
 
                         replaced_text = self._apply_text_replacement(full_text, text_replacements)
@@ -166,12 +177,16 @@ class DocxReplacer:
         self.doc.save(self.output_file)
 
 
+def image_to_base64(path):
+    with open(path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
 # Example usage
 if __name__ == "__main__":
     input_file = r"C:\word\bekoretKatsen.docx"
     output_file = rf"C:\word\bekoretKatsen_{time.time()}.docx"
     replacements = [
-        {"key": "<cusName>", "value": "שאדי", "type": "string"},
+        {"key": "<cusName>", "value": "פיראס סרור", "type": "string"},
         {"key": "<cusPhone>", "value": "0543341222", "type": "string"},
         {"key": "<hnDate>", "value": "14/11/2009", "type": "string"},
         {"key": "<date>", "value": "14/11/2010", "type": "string"},
@@ -180,8 +195,8 @@ if __name__ == "__main__":
         {"key": "<cn_2>", "value": "30", "type": "string"},
         {"key": "<cn_3>", "value": "102", "type": "string"},
         {"key": "<P1a>", "value": "X", "type": "string"},
-        {"key": "<winterSignature>", "value": "c:\\word\\s1.png", "type": "signature"},
-        {"key": "<officerSignature>", "value": "c:\\word\\s2.png", "type": "signature"}
+        {"key": "<winterSignature>", "value": image_to_base64("c:\\word\\s1.png"), "type": "signature"},
+        {"key": "<officerSignature>", "value": image_to_base64("c:\\word\\s2.png"), "type": "signature"}
     ]
 
     replacer = DocxReplacer(input_file, output_file, replacements)
