@@ -61,11 +61,12 @@ class DocxReplacer:
                     run = paragraph.add_run()
 
                     # Decode the base64 string to bytes
-                    image_bytes = base64.b64decode(image_path)
-                    image_stream = io.BytesIO(image_bytes)
-                    run.add_picture(image_stream, width=Inches(1))
+                    if image_path != "":
+                        image_bytes = base64.b64decode(image_path)
+                        image_stream = io.BytesIO(image_bytes)
+                        run.add_picture(image_stream, width=Inches(1))
 
-                    full_text = full_text.replace(key, "")
+                        full_text = full_text.replace(key, "")
 
             replaced_text = self._apply_text_replacement(full_text, text_replacements)
             if replaced_text != full_text:
@@ -89,11 +90,12 @@ class DocxReplacer:
                                 run = paragraph.add_run()
 
                                 #Decode the base64 string to bytes
-                                image_bytes = base64.b64decode(image_path)
-                                image_stream = io.BytesIO(image_bytes)
-                                run.add_picture(image_stream, width=Inches(1))
+                                if image_path != "":
+                                    image_bytes = base64.b64decode(image_path)
+                                    image_stream = io.BytesIO(image_bytes)
+                                    run.add_picture(image_stream, width=Inches(1))
 
-                                full_text = full_text.replace(key, "")
+                                    full_text = full_text.replace(key, "")
 
                         replaced_text = self._apply_text_replacement(full_text, text_replacements)
                         if replaced_text != full_text:
